@@ -1,0 +1,11 @@
+<ol class="breadcrumb">
+    {{#each directory}}
+        <li class="{{{class}}}">
+            {{#if class}}
+                {{name}}
+            {{else}}
+                <a href="#" {{bindData this}}>{{name}}</a>
+            {{/if}}
+        </li>
+    {{/each}}
+</ol>
