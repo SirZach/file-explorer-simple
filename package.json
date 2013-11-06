@@ -7,8 +7,12 @@
     "handlebars": "*"
   },
   "window": {
+    "title": "File Explorer",
     "toolbar": true,
-    "width": 660,
-    "height": 500
+    "width": 960,
+    "height": 800
+  },
+  "webkit": {
+    "plugin": true
   }
 }

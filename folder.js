@@ -10,18 +10,38 @@ var fs = require('fs'),
     path = require('path'),
     util = require('util');
 
-function fontAwesomeClass (stats) {
+var fileStatistics = function (stats, file) {
+  var ret = {
+    isDirectory: false,
+    isHidden: false,
+    faClass: 'fa-file-text'
+  };
+
   if (stats.isDirectory()) {
-    return 'fa-folder';
+    ret.isDirectory = true;
+    ret.faClass = 'fa-folder';
   }
 
-  return 'fa-file-text';
-}
+  if (file[0] === '.') {
+    ret.isHidden = true;
+    ret.faClass = 'fa-file-o';
+  }
+
+  if (ret.isHidden && ret.isDirectory) {
+    ret.faClass = 'fa-folder-o';
+  }
+
+  return ret;
+};
+
+
 
 function Folder (element, Handlebars) {
   this.element = element;
   this.Handlebars = Handlebars;
   this.template = this.Handlebars.templates['file.hbs'];
+  this.currentFiles = {};
+  this.canShowHidden = false;
 
   var self = this;
 
@@ -51,22 +71,39 @@ Folder.prototype.open = function (dir) {
     }
 
     for (var i = 0; i < files.length; ++i) {
-      var file = path.join(dir, files[i]);
-
-      var stats = fs.statSync(file),
-          faClass = fontAwesomeClass(stats);
+      var file = path.join(dir, files[i]),
+          stats = fs.statSync(file),
+          fileMetaData = fileStatistics(stats, files[i]);
 
       ret.files.push({
         name: files[i],
         fullPath: file,
-        faClass: faClass,
-        isDirectory: stats.isDirectory()
+        faClass: fileMetaData.faClass,
+        isHidden: fileMetaData.isHidden,
+        isDirectory: fileMetaData.isDirectory
       });
 
 //      files[i] = mime.stat(path.join(dir, files[i]));
     }
 
-    self.element.html(self.template(ret));
+    self.currentFiles = ret;
+
+    if (self.canShowHidden) {
+      self.element.html(self.template(ret));
+    } else {
+      var retCopy = {
+        files: []
+      };
+
+      ret.files.forEach(function (file) {
+        if (!file.isHidden) {
+          retCopy.files.push(file);
+        }
+      });
+
+      self.element.html(self.template(retCopy));
+    }
+
   });
 };
 
