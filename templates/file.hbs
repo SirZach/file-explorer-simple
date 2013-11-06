@@ -1,5 +1,7 @@
-<ul>
+<ul class="fa-ul">
     {{#each files}}
-        <li {{bindData this}}>{{name}}</li>
+        <li>
+            <i class="fa-li fa fa-lg {{{faClass}}}" {{bindData this}}></i>{{name}}
+        </li>
     {{/each}}
 </ul>

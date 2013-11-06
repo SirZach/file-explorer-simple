@@ -10,6 +10,14 @@ var fs = require('fs'),
     path = require('path'),
     util = require('util');
 
+function fontAwesomeClass (stats) {
+  if (stats.isDirectory()) {
+    return 'fa-folder';
+  }
+
+  return 'fa-file-text';
+}
+
 function Folder (element, Handlebars) {
   this.element = element;
   this.Handlebars = Handlebars;
@@ -18,7 +26,7 @@ function Folder (element, Handlebars) {
   var self = this;
 
   // Double click on file
-  this.element.delegate('li', 'dblclick', function() {
+  this.element.delegate('i', 'click', function() {
     var boundData = self.Handlebars.getBoundData(this);
 
     if (boundData.isDirectory) {
@@ -44,13 +52,14 @@ Folder.prototype.open = function (dir) {
 
     for (var i = 0; i < files.length; ++i) {
       var file = path.join(dir, files[i]);
-      console.log(file);
 
-      var stats = fs.statSync(file);
+      var stats = fs.statSync(file),
+          faClass = fontAwesomeClass(stats);
 
       ret.files.push({
         name: files[i],
         fullPath: file,
+        faClass: faClass,
         isDirectory: stats.isDirectory()
       });
 
