@@ -36,18 +36,17 @@ var fileStatistics = function (stats, file) {
 
 
 
-function Folder (element, Handlebars) {
+function Folder (element) {
   this.element = element;
-  this.Handlebars = Handlebars;
-  this.template = this.Handlebars.templates['file.hbs'];
+  this.template = Handlebars.templates['file.hbs'];
   this.currentFiles = {};
   this.canShowHidden = false;
 
   var self = this;
 
-  // Double click on file
+  // Click on file icon
   this.element.delegate('i', 'click', function() {
-    var boundData = self.Handlebars.getBoundData(this);
+    var boundData = Handlebars.getBoundData(this);
 
     if (boundData.isDirectory) {
       self.emit('navigate', boundData);
@@ -83,7 +82,6 @@ Folder.prototype.open = function (dir) {
         isDirectory: fileMetaData.isDirectory
       });
 
-//      files[i] = mime.stat(path.join(dir, files[i]));
     }
 
     self.currentFiles = ret;

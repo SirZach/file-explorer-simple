@@ -7,8 +7,8 @@
 #files ul li i.fa-folder {
   color: #add8e6;
 }
-#favorites h6 {
-  text-transform: uppercase;
+#favorites {
+  color: #f00;
 }
 body {
   padding: 10px;

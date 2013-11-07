@@ -10,16 +10,15 @@ var events = require('events'),
     util = require('util');
 
 
-function AddressBar (element, Handlebars) {
+function AddressBar (element) {
   this.element = element;
-  this.Handlebars = Handlebars;
   this.template = Handlebars.templates['addressbar.hbs'];
   this.currentPath = null;
 
   var self = this;
 
   element.delegate('a', 'click', function () {
-    var boundData = self.Handlebars.getBoundData(this);
+    var boundData = Handlebars.getBoundData(this);
 
     self.emit('navigate', boundData);
   });

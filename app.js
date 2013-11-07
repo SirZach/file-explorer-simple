@@ -24,16 +24,25 @@
 })();
 
 global.$ = $;
+global.Handlebars = Handlebars;
 
 var AddressBar = require('./addressbar'),
-    Folder = require('./folder');
+    Preferences = require('./preferences'),
+    Folder = require('./folder'),
+    shell = require('nw.gui').Shell;
 
 $(document).ready(function () {
-  var addressbar = new AddressBar($('#addressbar'), Handlebars),
-      folder = new Folder($('#files'), Handlebars);
+  var addressbar = new AddressBar($('#addressbar')),
+      preferences = new Preferences($('#preferences')),
+      folder = new Folder($('#files'));
 
   addressbar.set('/Users/sirzach');
   folder.open('/Users/sirzach');
+
+  preferences.on('selectOption', function (option, selected) {
+    console.log(option);
+    console.log(selected);
+  });
 
   folder.on('navigate', function(dirData) {
 //    if (mime.type == 'folder') {
@@ -43,6 +52,10 @@ $(document).ready(function () {
 //    }
     addressbar.set(dirData.fullPath);
     this.open(dirData.fullPath);
+  });
+
+  folder.on('open', function (file) {
+    shell.openItem(file.fullPath);
   });
 
   addressbar.on('navigate', function(dirData) {
