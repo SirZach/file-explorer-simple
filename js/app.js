@@ -26,9 +26,9 @@
 global.$ = $;
 global.Handlebars = Handlebars;
 
-var AddressBar = require('./addressbar'),
-    Preferences = require('./preferences'),
-    Folder = require('./folder'),
+var AddressBar = require('./js/addressbar'),
+    Preferences = require('./js/preferences'),
+    Folder = require('./js/folder'),
     shell = require('nw.gui').Shell;
 
 $(document).ready(function () {
@@ -40,8 +40,7 @@ $(document).ready(function () {
   folder.open('/Users/sirzach');
 
   preferences.on('selectOption', function (option, selected) {
-    console.log(option);
-    console.log(selected);
+    folder.updateOptions(option, selected);
   });
 
   folder.on('navigate', function(dirData) {

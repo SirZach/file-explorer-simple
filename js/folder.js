@@ -40,7 +40,9 @@ function Folder (element) {
   this.element = element;
   this.template = Handlebars.templates['file.hbs'];
   this.currentFiles = {};
-  this.canShowHidden = false;
+  this.options = {
+    canShowHiddenFiles: false
+  };
 
   var self = this;
 
@@ -55,6 +57,30 @@ function Folder (element) {
 }
 
 util.inherits(Folder, events.EventEmitter);
+
+Folder.prototype.updateOptions = function (option, value) {
+  this.options[option] = value;
+  this.updateTemplate();
+};
+
+Folder.prototype.updateTemplate = function () {
+
+  if (this.options.canShowHidden) {
+    this.element.html(this.template(this.currentFiles));
+  } else {
+    var retCopy = {
+      files: []
+    };
+
+    this.currentFiles.files.forEach(function (file) {
+      if (!file.isHidden) {
+        retCopy.files.push(file);
+      }
+    });
+
+    this.element.html(this.template(retCopy));
+  }
+};
 
 Folder.prototype.open = function (dir) {
   var ret = {
@@ -85,23 +111,7 @@ Folder.prototype.open = function (dir) {
     }
 
     self.currentFiles = ret;
-
-    if (self.canShowHidden) {
-      self.element.html(self.template(ret));
-    } else {
-      var retCopy = {
-        files: []
-      };
-
-      ret.files.forEach(function (file) {
-        if (!file.isHidden) {
-          retCopy.files.push(file);
-        }
-      });
-
-      self.element.html(self.template(retCopy));
-    }
-
+    self.updateTemplate();
   });
 };
 

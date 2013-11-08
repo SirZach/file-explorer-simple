@@ -15,7 +15,7 @@ function Preferences (element) {
   var self = this;
 
   this.element.delegate('input', 'click', function() {
-    var selected = this.getAttribute('checked'),
+    var selected = this.checked,
         option = this.getAttribute('value');
 
     self.emit('selectOption', option, selected);
