@@ -1,3 +1,7 @@
+#files {
+  overflow: auto;
+  height: 500px;
+}
 #files ul li {
   list-style: none;
 }

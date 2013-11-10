@@ -11,6 +11,9 @@ var events = require('events'),
 
 function Preferences (element) {
   this.element = element;
+  this.template = Handlebars.templates['preferences.hbs'];
+
+  this.element.html(this.template());
 
   var self = this;
 

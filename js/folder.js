@@ -13,6 +13,8 @@ var fs = require('fs'),
 var fileStatistics = function (stats, file) {
   var ret = {
         isDirectory: false,
+        isPicture: false,
+        isMovie: false,
         isHidden: false,
         faClass: 'fa-file-text'
       },
@@ -30,12 +32,19 @@ var fileStatistics = function (stats, file) {
       case '.mov':
       case '.avi':
         ret.faClass = 'fa-video-camera';
+        ret.isMovie = true;
         break;
       case '.mp3':
         ret.faClass = 'fa-headphones';
         break;
       case '.coffee':
         ret.faClass = 'fa-coffee';
+        break;
+      case '.jpg':
+      case '.gif':
+      case '.png':
+          ret.faClass = 'fa-picture-o';
+          ret.isPicture = true;
         break;
     }
 
@@ -71,6 +80,8 @@ function Folder (element) {
 
     if (boundData.isDirectory) {
       self.emit('navigate', boundData);
+    } else {
+      self.emit('previewFile', boundData);
     }
   });
 }
@@ -124,6 +135,8 @@ Folder.prototype.open = function (dir) {
         fullPath: file,
         faClass: fileMetaData.faClass,
         isHidden: fileMetaData.isHidden,
+        isPicture: fileMetaData.isPicture,
+        isMovie: fileMetaData.isMovie,
         isDirectory: fileMetaData.isDirectory
       });
 

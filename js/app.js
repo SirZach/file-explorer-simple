@@ -28,12 +28,14 @@ global.Handlebars = Handlebars;
 
 var AddressBar = require('./js/addressbar'),
     Preferences = require('./js/preferences'),
+    Preview = require('./js/preview'),
     Folder = require('./js/folder'),
     shell = require('nw.gui').Shell;
 
 $(document).ready(function () {
   var addressbar = new AddressBar($('#addressbar')),
       preferences = new Preferences($('#preferences')),
+      preview = new Preview($('#preview')),
       folder = new Folder($('#files'));
 
   addressbar.set('/Users/sirzach');
@@ -43,7 +45,7 @@ $(document).ready(function () {
     folder.updateOptions(option, selected);
   });
 
-  folder.on('navigate', function(dirData) {
+  folder.on('navigate', function (dirData) {
 //    if (mime.type == 'folder') {
 //      addressbar.enter(mime);
 //    } else {
@@ -51,6 +53,10 @@ $(document).ready(function () {
 //    }
     addressbar.set(dirData.fullPath);
     this.open(dirData.fullPath);
+  });
+
+  folder.on('previewFile', function (fileData) {
+    preview.updateTemplate(fileData);
   });
 
   folder.on('open', function (file) {
