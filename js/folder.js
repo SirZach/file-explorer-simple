@@ -80,8 +80,10 @@ function Folder (element) {
 
     if (boundData.isDirectory) {
       self.emit('navigate', boundData);
-    } else {
+    } else if (boundData.canPreview) {
       self.emit('previewFile', boundData);
+    } else {
+      self.emit('openFile');
     }
   });
 }
@@ -128,7 +130,8 @@ Folder.prototype.open = function (dir) {
     for (var i = 0; i < files.length; ++i) {
       var file = path.join(dir, files[i]),
           stats = fs.statSync(file),
-          fileMetaData = fileStatistics(stats, files[i]);
+          fileMetaData = fileStatistics(stats, files[i]),
+          canPreview = fileMetaData.isPicture || fileMetaData.isMovie ? true : false;
 
       ret.files.push({
         name: files[i],
@@ -137,6 +140,7 @@ Folder.prototype.open = function (dir) {
         isHidden: fileMetaData.isHidden,
         isPicture: fileMetaData.isPicture,
         isMovie: fileMetaData.isMovie,
+        canPreview: canPreview,
         isDirectory: fileMetaData.isDirectory
       });
 

@@ -19,8 +19,14 @@ function Preview (element) {
   }));
 
   this.updateTemplate = function (fileData) {
-    console.log(fileData);
     this.element.html(this.template(fileData));
+  };
+
+  this.clearTemplate = function () {
+    this.element.html(this.template({
+      isPicture: false,
+      isMovie: false
+    }));
   };
 }
 

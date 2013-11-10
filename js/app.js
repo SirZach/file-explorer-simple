@@ -46,12 +46,8 @@ $(document).ready(function () {
   });
 
   folder.on('navigate', function (dirData) {
-//    if (mime.type == 'folder') {
-//      addressbar.enter(mime);
-//    } else {
-//      shell.openItem(mime.path);
-//    }
     addressbar.set(dirData.fullPath);
+    preview.clearTemplate();
     this.open(dirData.fullPath);
   });
 
@@ -59,12 +55,13 @@ $(document).ready(function () {
     preview.updateTemplate(fileData);
   });
 
-  folder.on('open', function (file) {
+  folder.on('openFile', function (file) {
     shell.openItem(file.fullPath);
   });
 
   addressbar.on('navigate', function(dirData) {
     this.set(dirData.directory);
+    preview.clearTemplate();
     folder.open(dirData.directory);
   });
 });

@@ -1,3 +1,9 @@
 {{#if isPicture}}
     <img src="{{{fullPath}}}"></img>
 {{/if}}
+
+{{#if isMovie}}
+    <video src="{{{fullPath}}}" type="vide/mp4" controls>
+        Your browser does not support the <code>video</code> element.
+    </video>
+{{/if}}
