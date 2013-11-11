@@ -137,7 +137,7 @@ function program3(depth0,data) {
   if (stack1 = helpers.fullPath) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.fullPath; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\" type=\"vide/mp4\" controls>\n        Your browser does not support the <code>video</code> element.\n    </video>\n";
+  buffer += "\" type=\"video/mp4\" controls>\n        Your browser does not support the <code>video</code> element.\n    </video>\n";
   return buffer;
   }
 

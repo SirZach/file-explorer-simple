@@ -59,6 +59,10 @@ var fileStatistics = function (stats, file) {
     ret.faClass = 'fa-folder-o';
   }
 
+  if (ret.isMovie || ret.isPicture || ret.isDirectory) {
+    ret.faClass += ' cursor-pointer';
+  }
+
   return ret;
 };
 
@@ -83,7 +87,7 @@ function Folder (element) {
     } else if (boundData.canPreview) {
       self.emit('previewFile', boundData);
     } else {
-      self.emit('openFile');
+      self.emit('openFile', boundData);
     }
   });
 }

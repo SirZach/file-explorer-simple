@@ -5,9 +5,6 @@
 #files ul li {
   list-style: none;
 }
-#files ul li i {
-  cursor: pointer;
-}
 #files ul li i.fa-folder {
   color: #add8e6;
 }
@@ -29,4 +26,7 @@
 }
 body {
   padding: 10px;
+}
+.cursor-pointer {
+  cursor: pointer;
 }
