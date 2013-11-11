@@ -28,12 +28,14 @@ global.Handlebars = Handlebars;
 
 var AddressBar = require('./js/addressbar'),
     Preferences = require('./js/preferences'),
+    ContextMenu = require('./js/context_menu'),
     Preview = require('./js/preview'),
     Folder = require('./js/folder'),
     shell = require('nw.gui').Shell;
 
 $(document).ready(function () {
   var addressbar = new AddressBar($('#addressbar')),
+      contextMenu = new ContextMenu($('#context-menu')),
       preferences = new Preferences($('#preferences')),
       preview = new Preview($('#preview')),
       folder = new Folder($('#files'));
@@ -55,8 +57,9 @@ $(document).ready(function () {
     preview.updateTemplate(fileData);
   });
 
-  folder.on('openFile', function (file) {
-    shell.openItem(file.fullPath);
+  folder.on('showContextMenu', function (file) {
+    contextMenu.open(file);
+//    shell.openItem(file.fullPath);
   });
 
   addressbar.on('navigate', function(dirData) {

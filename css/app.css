@@ -24,6 +24,9 @@
   height: 100%;
   width: 100%;
 }
+#context-menu {
+  display: none;
+}
 body {
   padding: 10px;
 }

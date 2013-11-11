@@ -49,6 +49,14 @@ function program4(depth0,data) {
   buffer += "\n</ol>";
   return buffer;
   });
+templates['context_menu.hbs'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<ul class=\"list-group\">\n    <li class=\"list-group-item\" data-menu=\"open\">Open</li>\n</ul>";
+  });
 templates['explorer.hbs'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};

@@ -8,72 +8,17 @@
 var fs = require('fs'),
     events = require('events'),
     path = require('path'),
-    util = require('util');
-
-var fileStatistics = function (stats, file) {
-  var ret = {
-        isDirectory: false,
-        isPicture: false,
-        isMovie: false,
-        isHidden: false,
-        faClass: 'fa-file-text'
-      },
-      ext = path.extname(file);
-
-  if (stats.isDirectory()) {
-    ret.isDirectory = true;
-    ret.faClass = 'fa-folder';
-  } else {
-    switch (ext) {
-      case '.html':
-        ret.faClass = 'fa-html5';
-        break;
-      case '.mp4':
-      case '.mov':
-      case '.avi':
-        ret.faClass = 'fa-video-camera';
-        ret.isMovie = true;
-        break;
-      case '.mp3':
-        ret.faClass = 'fa-headphones';
-        break;
-      case '.coffee':
-        ret.faClass = 'fa-coffee';
-        break;
-      case '.jpg':
-      case '.gif':
-      case '.png':
-          ret.faClass = 'fa-picture-o';
-          ret.isPicture = true;
-        break;
-    }
-
-  }
-
-  if (file[0] === '.') {
-    ret.isHidden = true;
-    ret.faClass = 'fa-file-o';
-  }
-
-  if (ret.isHidden && ret.isDirectory) {
-    ret.faClass = 'fa-folder-o';
-  }
-
-  if (ret.isMovie || ret.isPicture || ret.isDirectory) {
-    ret.faClass += ' cursor-pointer';
-  }
-
-  return ret;
-};
-
+    util = require('util'),
+    mimeStats = require('./mime_stats');
 
 
 function Folder (element) {
+  /************************ CONSTRUCTOR **************/
   this.element = element;
   this.template = Handlebars.templates['file.hbs'];
   this.currentFiles = {};
   this.options = {
-    canShowHiddenFiles: false
+    canShowHidden: false
   };
 
   var self = this;
@@ -86,73 +31,91 @@ function Folder (element) {
       self.emit('navigate', boundData);
     } else if (boundData.canPreview) {
       self.emit('previewFile', boundData);
-    } else {
-      self.emit('openFile', boundData);
     }
   });
+
+  this.element.delegate('i', 'contextmenu', function () {
+    var boundData = Handlebars.getBoundData(this);
+
+    self.emit('showContextMenu', boundData);
+  });
+
+  /*********************** END CONSTRUCTOR **************/
+
+  /**
+   * A preference was selected from the Preferences pane, update the shown files accordingly
+   * @param option
+   * @param value
+   */
+  this.updateOptions = function (option, value) {
+    this.options[option] = value;
+    this.updateTemplate();
+  };
+
+  /**
+   * Using the options and cached files, render the HTML for the files listing
+   */
+  this.updateTemplate = function () {
+
+    if (this.options.canShowHidden) {
+      this.element.html(this.template(this.currentFiles));
+    } else {
+      var retCopy = {
+        files: []
+      };
+
+      this.currentFiles.files.forEach(function (file) {
+        if (!file.isHidden) {
+          retCopy.files.push(file);
+        }
+      });
+
+      this.element.html(this.template(retCopy));
+    }
+  };
+
+  /**
+   * Given a directory, assemble the list of files and their metadata to be rendered
+   * @param dir
+   */
+  this.open = function (dir) {
+    var ret = {
+          files: []
+        },
+        self = this;
+
+    fs.readdir(dir, function(error, files) {
+      if (error) {
+        console.log(error);
+        window.alert(error);
+        return;
+      }
+
+      for (var i = 0; i < files.length; ++i) {
+        var file = path.join(dir, files[i]),
+            stats = fs.statSync(file),
+            fileMetaData = mimeStats(stats, files[i]),
+            canPreview = fileMetaData.isPicture || fileMetaData.isMovie ? true : false;
+
+        ret.files.push({
+          name: files[i],
+          fullPath: file,
+          faClass: fileMetaData.faClass,
+          isHidden: fileMetaData.isHidden,
+          isPicture: fileMetaData.isPicture,
+          isMovie: fileMetaData.isMovie,
+          canPreview: canPreview,
+          isDirectory: fileMetaData.isDirectory
+        });
+
+      }
+
+      self.currentFiles = ret;
+      self.updateTemplate();
+    });
+  };
 }
 
 util.inherits(Folder, events.EventEmitter);
-
-Folder.prototype.updateOptions = function (option, value) {
-  this.options[option] = value;
-  this.updateTemplate();
-};
-
-Folder.prototype.updateTemplate = function () {
-
-  if (this.options.canShowHidden) {
-    this.element.html(this.template(this.currentFiles));
-  } else {
-    var retCopy = {
-      files: []
-    };
-
-    this.currentFiles.files.forEach(function (file) {
-      if (!file.isHidden) {
-        retCopy.files.push(file);
-      }
-    });
-
-    this.element.html(this.template(retCopy));
-  }
-};
-
-Folder.prototype.open = function (dir) {
-  var ret = {
-        files: []
-      },
-      self = this;
-
-  fs.readdir(dir, function(error, files) {
-    if (error) {
-      console.log(error);
-      window.alert(error);
-      return;
-    }
-
-    for (var i = 0; i < files.length; ++i) {
-      var file = path.join(dir, files[i]),
-          stats = fs.statSync(file),
-          fileMetaData = fileStatistics(stats, files[i]),
-          canPreview = fileMetaData.isPicture || fileMetaData.isMovie ? true : false;
-
-      ret.files.push({
-        name: files[i],
-        fullPath: file,
-        faClass: fileMetaData.faClass,
-        isHidden: fileMetaData.isHidden,
-        isPicture: fileMetaData.isPicture,
-        isMovie: fileMetaData.isMovie,
-        canPreview: canPreview,
-        isDirectory: fileMetaData.isDirectory
-      });
-
-    }
-
-    self.currentFiles = ret;
-    self.updateTemplate();
-  });
-};
 
 module.exports = Folder;
