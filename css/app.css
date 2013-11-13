@@ -27,6 +27,9 @@
 #context-menu {
   display: none;
 }
+#context-menu ul {
+  width: 100px;
+}
 body {
   padding: 10px;
 }
