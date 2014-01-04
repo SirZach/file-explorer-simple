@@ -1,37 +1,17 @@
 'use strict';
 
-(function() {
-
-  var id = 0,
-      cache = [];
-
-  Handlebars.registerHelper("bindData", function(data) {
-    var dataKey = id++;
-    cache[dataKey] = data;
-
-    return "data-handlebar-id=" + dataKey;
-  });
-
-  Handlebars.getBoundData = function(handlebarId) {
-    if (typeof(handlebarId) !== "string") {
-      // If a string was not passed in, it is the html element, so grab it's id.
-      handlebarId = handlebarId.getAttribute("data-handlebar-id");
-    }
-
-    return cache[handlebarId];
-  };
-
-})();
+global.Handlebars = Handlebars;
+require('./js/handlebars');
 
 global.$ = $;
-global.Handlebars = Handlebars;
+global.App = {};
 
 var AddressBar = require('./js/addressbar'),
     Preferences = require('./js/preferences'),
     ContextMenu = require('./js/context_menu'),
     Preview = require('./js/preview'),
     Folder = require('./js/folder'),
-    shell = require('nw.gui').Shell;
+    Shell = require('nw.gui').Shell;
 
 $(document).ready(function () {
   var addressbar = new AddressBar($('#addressbar')),
@@ -67,4 +47,10 @@ $(document).ready(function () {
     preview.clearTemplate();
     folder.open(dirData.directory);
   });
+
+  App.addressbar = addressbar;
+  App.contextMenu = contextMenu;
+  App.preferences = preferences;
+  App.preview = preview;
+  App.folder = folder;
 });
