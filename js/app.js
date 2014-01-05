@@ -14,41 +14,17 @@ var AddressBar = require('./js/addressbar'),
     Shell = require('nw.gui').Shell;
 
 $(document).ready(function () {
-  var addressbar = new AddressBar($('#addressbar')),
+  var addressBar = new AddressBar($('#addressbar')),
       contextMenu = new ContextMenu($('#context-menu')),
       preferences = new Preferences($('#preferences')),
       preview = new Preview($('#preview')),
-      folder = new Folder($('#files'));
+      folder = new Folder($('#files')),
+      App = global.App;
 
-  addressbar.set('/Users/sirzach');
+  addressBar.set('/Users/sirzach');
   folder.open('/Users/sirzach');
 
-  preferences.on('selectOption', function (option, selected) {
-    folder.updateOptions(option, selected);
-  });
-
-  folder.on('navigate', function (dirData) {
-    addressbar.set(dirData.fullPath);
-    preview.clearTemplate();
-    this.open(dirData.fullPath);
-  });
-
-  folder.on('previewFile', function (fileData) {
-    preview.updateTemplate(fileData);
-  });
-
-  folder.on('showContextMenu', function (file) {
-    contextMenu.open(file);
-//    shell.openItem(file.fullPath);
-  });
-
-  addressbar.on('navigate', function(dirData) {
-    this.set(dirData.directory);
-    preview.clearTemplate();
-    folder.open(dirData.directory);
-  });
-
-  App.addressbar = addressbar;
+  App.addressBar = addressBar;
   App.contextMenu = contextMenu;
   App.preferences = preferences;
   App.preview = preview;

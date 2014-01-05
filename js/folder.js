@@ -9,10 +9,11 @@ var fs = require('fs'),
     events = require('events'),
     path = require('path'),
     util = require('util'),
+    App = global.App,
     mimeStats = require('./mime_stats');
 
 
-function Folder (element) {
+var Folder = function (element) {
   /************************ CONSTRUCTOR **************/
   this.element = element;
   this.template = Handlebars.templates['file.hbs'];
@@ -117,5 +118,20 @@ function Folder (element) {
 }
 
 util.inherits(Folder, events.EventEmitter);
+
+Folder.prototype.on('navigate', function (dirData) {
+  App.addressBar.set(dirData.fullPath);
+  App.preview.clearTemplate();
+  this.open(dirData.fullPath);
+});
+
+Folder.prototype.on('previewFile', function (fileData) {
+  App.preview.updateTemplate(fileData);
+});
+
+Folder.prototype.on('showContextMenu', function (file) {
+  App.contextMenu.open(file);
+//    shell.openItem(file.fullPath);
+});
 
 module.exports = Folder;

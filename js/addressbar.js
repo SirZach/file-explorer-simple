@@ -7,6 +7,7 @@
 'use strict';
 
 var events = require('events'),
+    App = global.App,
     util = require('util');
 
 
@@ -52,5 +53,11 @@ AddressBar.prototype.set = function (dir) {
 
   this.element.html(this.template(data));
 };
+
+AddressBar.prototype.on('navigate', function(dirData) {
+  this.set(dirData.directory);
+  App.preview.clearTemplate();
+  App.folder.open(dirData.directory);
+});
 
 module.exports = AddressBar;

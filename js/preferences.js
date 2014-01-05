@@ -7,9 +7,10 @@
 'use strict';
 
 var events = require('events'),
+    App = global.App,
     util = require('util');
 
-function Preferences (element) {
+var Preferences = function (element) {
   this.element = element;
   this.template = Handlebars.templates['preferences.hbs'];
 
@@ -23,9 +24,12 @@ function Preferences (element) {
 
     self.emit('selectOption', option, selected);
   });
-}
+};
 
 util.inherits(Preferences, events.EventEmitter);
 
+Preferences.prototype.on('selectOption', function (option, selected) {
+  App.folder.updateOptions(option, selected);
+});
 
 module.exports = Preferences;
