@@ -35,10 +35,10 @@ var Folder = function (element) {
     }
   });
 
-  this.element.delegate('i', 'contextmenu', function () {
+  this.element.delegate('i', 'contextmenu', function (event) {
     var boundData = Handlebars.getBoundData(this);
 
-    self.emit('showContextMenu', boundData);
+    self.emit('showContextMenu', boundData, event.pageX, event.pageY);
   });
 
   /*********************** END CONSTRUCTOR **************/
@@ -115,7 +115,7 @@ var Folder = function (element) {
       self.updateTemplate();
     });
   };
-}
+};
 
 util.inherits(Folder, events.EventEmitter);
 
@@ -129,8 +129,8 @@ Folder.prototype.on('previewFile', function (fileData) {
   App.preview.updateTemplate(fileData);
 });
 
-Folder.prototype.on('showContextMenu', function (file) {
-  App.contextMenu.open(file);
+Folder.prototype.on('showContextMenu', function (file, x, y) {
+  App.contextMenu.open(file, x, y);
 //    shell.openItem(file.fullPath);
 });
 

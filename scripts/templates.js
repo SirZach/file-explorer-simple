@@ -55,7 +55,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<ul class=\"list-group\">\n  <li class=\"list-group-item\" data-menu=\"close\">Close</li>\n  <li class=\"list-group-item\" data-menu=\"open\">Open</li>\n</ul>";
+  return "<div class=\"list-group\">\n  <a href=\"#\" class=\"list-group-item\" data-menu=\"open\">Open</a>\n  <a href=\"#\" class=\"list-group-item\" data-menu=\"close\">Close</a>\n</div>";
   });
 templates['explorer.hbs'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
@@ -105,14 +105,6 @@ function program1(depth0,data) {
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n</ul>";
   return buffer;
-  });
-templates['index.hbs'] = template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  
-
-
-  return "hi bart\nhahaahah";
   });
 templates['preferences.hbs'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];

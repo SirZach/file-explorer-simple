@@ -26,9 +26,7 @@
 }
 #context-menu {
   display: none;
-}
-#context-menu ul {
-  width: 100px;
+  position: fixed;
 }
 body {
   padding: 10px;
