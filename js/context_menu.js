@@ -6,16 +6,20 @@
 
 'use strict';
 
-var ContextMenu = function (element) {
+var App = global.App;
+
+var ContextMenu = function (elem) {
   /****************** CONSTRUCTOR **************/
-  this.element = element;
-  this.template = Handlebars.templates['context_menu.hbs'];
-  this.file = null;
+  var element = elem,
+      template = Handlebars.templates['context_menu.hbs'],
+      file = null;
 
-  var self = this;
+  element.delegate('a[data-menu="close"]', 'click', function (event) {
+    close();
+  });
 
-  this.element.delegate('a[data-menu="close"]', 'click', function (event) {
-    self.close();
+  element.delegate('a[data-menu="openFile"]', 'click', function (event) {
+    openFile();
   });
   /***************** END CONSTRUCTOR ************/
 
@@ -23,21 +27,31 @@ var ContextMenu = function (element) {
    * Given some file, open the right click menu
    * @param file
    */
-  this.open = function (file, x, y) {
-    this.file = file;
-    this.element.html(this.template());
-    $(this.element).css({
+  function open (f, x, y) {
+    file = f;
+    element.html(template());
+    $(element).css({
       display: 'block',
       left: x,
       top: y
     });
-  };
+  }
 
   /**
    * Close the context menu
    */
-  this.close = function () {
-    $(this.element).toggle();
+  function close () {
+    $(element).toggle();
+  }
+
+  function openFile () {
+    App.shell.openItem(file.fullPath);
+    close();
+  }
+
+  return {
+    close: close,
+    open: open
   };
 };
 

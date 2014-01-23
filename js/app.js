@@ -29,4 +29,5 @@ $(document).ready(function () {
   App.preferences = preferences;
   App.preview = preview;
   App.folder = folder;
+  App.shell = Shell;
 });

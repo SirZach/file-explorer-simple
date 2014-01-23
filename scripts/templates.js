@@ -55,7 +55,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"list-group\">\n  <a href=\"#\" class=\"list-group-item\" data-menu=\"open\">Open</a>\n  <a href=\"#\" class=\"list-group-item\" data-menu=\"close\">Close</a>\n</div>";
+  return "<div class=\"list-group\">\n  <a href=\"#\" class=\"list-group-item\" data-menu=\"openFile\">Open</a>\n  <a href=\"#\" class=\"list-group-item\" data-menu=\"close\">Close</a>\n</div>";
   });
 templates['explorer.hbs'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
